@@ -942,6 +942,28 @@ If using Dev Containers in VS Code:
 - Press `F1`
 - Select: `Dev Containers: Rebuild Container`
 
+### Moving the Project to a Different Directory
+
+If you move or clone NimBase to a different location on your system, you **must rebuild the container** so the parent directory mount points to the correct location:
+
+```powershell
+# Navigate to the new location
+cd D:\NewLocation\NimBase
+
+# Stop and remove the old container
+docker-compose down
+
+# Rebuild from the new location
+docker-compose up -d --build
+```
+
+Or in VS Code:
+1. Close the Dev Container
+2. Open the folder from the new location
+3. Press `F1` → `Dev Containers: Reopen in Container`
+
+**Why?** The container mounts the parent directory (using `source: ..` in `docker-compose.yml`) to give you access to sibling projects. When you move the directory, Docker needs to remount from the new location.
+
 ## 📦 Managing Dependencies
 
 ### Docker Dependencies
