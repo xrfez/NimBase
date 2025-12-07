@@ -332,7 +332,7 @@ RUN curl -s https://ohmyposh.dev/install.sh | bash -s
 RUN mkdir -p /root/.config && \
     { \
     echo '# Zsh history configuration - persist in volume'; \
-    echo 'export HISTFILE=/root/.zsh_history_mount'; \
+    echo 'export HISTFILE=/root/.zsh_history_persistent/.zsh_history'; \
     echo 'export HISTSIZE=10000'; \
     echo 'export SAVEHIST=10000'; \
     echo 'setopt SHARE_HISTORY'; \
@@ -386,11 +386,10 @@ RUN mkdir -p /root/.zsh_persistent && \
     echo '# export MY_VAR="value"'; \
     echo '# alias myalias="command"'; \
     } > /root/.zsh_persistent/.zshrc.local && \
-    # Configure bash history to use volume mount \
-    echo 'export HISTFILE=/root/.bash_history_mount' >> /root/.bashrc && \
-    # Configure zsh history to use volume mount \
-    mkdir -p /root/.cache/oh-my-posh && \
-    touch /root/.zsh_history_mount
+    # Create directories for persistent history files \
+    mkdir -p /root/.bash_history_persistent /root/.zsh_history_persistent /root/.cache/oh-my-posh && \
+    # Configure bash history to use file in persistent directory \
+    echo 'export HISTFILE=/root/.bash_history_persistent/.bash_history' >> /root/.bashrc
 
 # Create workspace directory (will be overridden by volume mount)
 RUN mkdir -p /workspace

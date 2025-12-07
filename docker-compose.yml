@@ -63,10 +63,10 @@ services:
       - nim-cache:/root/.cache/nim
 
       # Persist bash history for convenience
-      - bash-history:/root/.bash_history_mount
+      - bash-history:/root/.bash_history_persistent
 
       # Persist zsh history for convenience
-      - zsh-history:/root/.zsh_history_mount
+      - zsh-history:/root/.zsh_history_persistent
 
       # Mount Docker socket for Docker-in-Docker (DinD) support
       # This allows running docker commands inside the container
