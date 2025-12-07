@@ -220,6 +220,13 @@ RUN curl -fsSL https://bun.sh/install | bash \
     && ln -s /root/.bun/bin/bun /usr/local/bin/bun \
     && ln -s /root/.bun/bin/bunx /usr/local/bin/bunx
 
+# Install rcedit for adding icons and version info to Windows executables
+# rcedit is a command-line tool to edit resources of Windows executables
+# Useful for adding icons, version info, and metadata to .exe files after compilation
+RUN RCEDIT_VERSION="2.0.0" \
+    && curl -fsSL "https://github.com/electron/rcedit/releases/download/v${RCEDIT_VERSION}/rcedit-x64.exe" -o /usr/local/bin/rcedit.exe \
+    && chmod +x /usr/local/bin/rcedit.exe
+
 # Create Nim installation directory
 # Uses mkdir -p so it works even if directory exists or parent doesn't exist
 RUN mkdir -p ${NIMBASE}

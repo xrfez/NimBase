@@ -116,6 +116,24 @@ nim c --cc:clang --clang.exe=zigcc --clang.linkerexe=zigcc --os:macosx --cpu:arm
 nim c --os:windows --cpu:i386 -d:mingw myfile.nim
 ```
 
+### Windows Executable Icons & Version Info
+```bash
+# Quick: Add icon with rcedit (requires Wine)
+nim c --os:windows -d:mingw myapp.nim
+wine /usr/local/bin/rcedit.exe myapp.exe --set-icon icon.ico
+
+# Better: Use windres during compilation
+x86_64-w64-mingw32-windres app.rc -O coff -o app.res
+nim c --os:windows -d:mingw --passL:app.res myapp.nim
+
+# Full version info with rcedit
+wine /usr/local/bin/rcedit.exe myapp.exe \
+  --set-icon icon.ico \
+  --set-version-string "CompanyName" "My Company" \
+  --set-version-string "FileDescription" "My App" \
+  --set-file-version "1.0.0.0"
+```
+
 ### Package Management
 ```bash
 # Search for packages

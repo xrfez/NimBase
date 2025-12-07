@@ -10,6 +10,7 @@ A complete, plug-and-play Docker-based development environment for the Nim progr
 - **Compilers**: GCC, Clang, LLVM (with full toolchain), TCC, Zig, and MinGW
 - **Build Tools**: CMake, Make, LLD (LLVM linker) for project building
 - **Cross-Compilation**: Build for Windows, Linux, and macOS from the same container
+- **Windows Executable Tools**: rcedit and windres for adding icons and version info to .exe files
 - **JavaScript Ecosystem**: Node.js with npm and Bun (with built-in package manager)
 - **Package Manager**: Nimble and Atlas for dependency management
 - **Docker-in-Docker**: Run Docker commands inside the container for databases, services, etc.
@@ -278,6 +279,102 @@ nim c --os:linux --cpu:arm myprogram.nim
 # ARM64 Linux
 nim c --os:linux --cpu:arm64 myprogram.nim
 ```
+
+### Adding Icons and Version Info to Windows Executables
+
+The container includes tools for adding icons, version information, and metadata to Windows .exe files:
+
+#### Option 1: Using rcedit (Easiest - Post-Compilation)
+
+```bash
+# Add icon to existing .exe
+wine /usr/local/bin/rcedit.exe myprogram.exe --set-icon icon.ico
+
+# Add version info
+wine /usr/local/bin/rcedit.exe myprogram.exe \
+  --set-version-string "CompanyName" "My Company" \
+  --set-version-string "FileDescription" "My Application" \
+  --set-version-string "ProductName" "MyApp" \
+  --set-file-version "1.0.0.0" \
+  --set-product-version "1.0.0.0"
+
+# Add both icon and version info
+wine /usr/local/bin/rcedit.exe myprogram.exe \
+  --set-icon icon.ico \
+  --set-version-string "CompanyName" "My Company" \
+  --set-version-string "FileDescription" "My Application" \
+  --set-version-string "LegalCopyright" "Copyright 2025" \
+  --set-file-version "1.0.0.0"
+```
+
+#### Option 2: Using windres (More Control - During Compilation)
+
+1. Create a resource file `app.rc`:
+
+```rc
+#include <windows.h>
+
+// Icon
+IDI_ICON1 ICON "icon.ico"
+
+// Version Info
+1 VERSIONINFO
+FILEVERSION 1,0,0,0
+PRODUCTVERSION 1,0,0,0
+FILEFLAGSMASK 0x3fL
+FILEFLAGS 0x0L
+FILEOS VOS_NT_WINDOWS32
+FILETYPE VFT_APP
+FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName", "My Company"
+            VALUE "FileDescription", "My Application"
+            VALUE "FileVersion", "1.0.0.0"
+            VALUE "InternalName", "myapp"
+            VALUE "LegalCopyright", "Copyright 2025"
+            VALUE "OriginalFilename", "myapp.exe"
+            VALUE "ProductName", "MyApp"
+            VALUE "ProductVersion", "1.0.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+```
+
+2. Compile the resource file:
+
+```bash
+x86_64-w64-mingw32-windres app.rc -O coff -o app.res
+```
+
+3. Link it with your Nim program:
+
+```bash
+nim c --os:windows --cpu:amd64 -d:mingw \
+  --passL:app.res \
+  myprogram.nim
+```
+
+#### Quick Icon-Only Method
+
+For just adding an icon quickly:
+
+```bash
+# 1. Compile your program
+nim c --os:windows -d:mingw myprogram.nim
+
+# 2. Add icon with rcedit
+wine /usr/local/bin/rcedit.exe myprogram.exe --set-icon icon.ico
+```
+
+**Note**: `rcedit.exe` requires Wine to run in the Linux container. For automated builds, consider using windres for a native Linux solution.
 
 ### JavaScript Development with Bun
 
