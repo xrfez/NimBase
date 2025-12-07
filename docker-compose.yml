@@ -83,6 +83,10 @@ services:
       # Add your customizations directly in the container at /root/.zshrc.local
       - zsh-config:/root/.zsh_persistent
 
+      # Persist user-level Nim configuration (nim.cfg, config.nims)
+      # This allows global Nim settings that apply to all projects
+      - nim-user-config:/root/.config/nim
+
     # Port mappings
     # Format: "host_port:container_port"
     ports:
@@ -144,6 +148,12 @@ volumes:
   zsh-config:
     driver: local
     name: nim-dev-zsh-config
+
+  # Nim user configuration persistence
+  # Stores ~/.config/nim/ for user-level nim.cfg and config.nims
+  nim-user-config:
+    driver: local
+    name: nim-dev-nim-user-config
 
 # Custom network for the development environment
 # Useful if you want to add additional services (databases, etc.)

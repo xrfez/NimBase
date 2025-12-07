@@ -78,6 +78,10 @@
 					"editor.defaultFormatter": "nimlang.nimlang",
 					"editor.formatOnSave": true
 				},
+				// Disable format on save for INI files (includes .cfg, .nimble, .paths)
+				"[ini]": {
+					"editor.formatOnSave": false
+				},
 				// Editor settings
 				"editor.formatOnSave": true,
 				"editor.tabSize": 2,
@@ -102,12 +106,15 @@
 				"terminal.integrated.fontFamily": "MesloLGM Nerd Font, MesloLGS NF, FiraCode Nerd Font, Consolas, monospace",
 				"terminal.integrated.fontSize": 14,
 				// File associations
-				// Note: .nimble files are intentionally NOT associated with "nim" language
+				// Note: .nimble, .paths, and .cfg files are intentionally NOT associated with "nim" language
 				// to prevent nimlangserver from processing them and crashing
+				// These files are config/metadata, not Nim source code
 				"files.associations": {
 					"*.nim": "nim",
 					"*.nims": "nim",
-					"*.nimble": "ini" // Treat as INI to prevent LSP activation
+					"*.nimble": "ini", // Treat as INI to prevent LSP activation
+					"*.paths": "ini", // Nim paths files also as INI
+					"*.cfg": "ini" // Nim config files as INI (prevents formatting issues)
 				},
 				// Exclude files from being watched for changes by file watchers
 				// This prevents nimlangserver crashes when these files change
@@ -119,44 +126,44 @@
 				// Exclude files from language server processing
 				"nim.langserver.excludeFiles": [
 					"**/*.nimble",
-					"**/*.paths",
-					"**/*.cfg"
+					"**/*.paths"
 				]
-			}
+			]
 		}
+	}
+},
+// Port forwarding - these ports will be accessible from Windows
+// Format: "containerPort:hostPort" or just "port" for same on both
+"forwardPorts": [
+	8080,
+	3000
+],
+// Ports to label for easy identification
+"portsAttributes": {
+	"8080": {
+		"label": "Development Server",
+		"onAutoForward": "notify"
 	},
-	// Port forwarding - these ports will be accessible from Windows
-	// Format: "containerPort:hostPort" or just "port" for same on both
-	"forwardPorts": [
-		8080,
-		3000
-	],
-	// Ports to label for easy identification
-	"portsAttributes": {
-		"8080": {
-			"label": "Development Server",
-			"onAutoForward": "notify"
-		},
-		"3000": {
-			"label": "Node.js Server",
-			"onAutoForward": "notify"
-		}
-	},
-	// Commands to run after the container is created (one-time setup)
-	// Fix SSH key permissions if keys are mounted from host
-	"postCreateCommand": "bash -c 'if [ -f /root/.ssh/id_ed25519 ]; then chmod 600 /root/.ssh/id_ed25519; fi && if [ -f /root/.ssh/id_ed25519.pub ]; then chmod 644 /root/.ssh/id_ed25519.pub; fi && if [ -f /root/.ssh/id_rsa ]; then chmod 600 /root/.ssh/id_rsa; fi && if [ -f /root/.ssh/id_rsa.pub ]; then chmod 644 /root/.ssh/id_rsa.pub; fi && if [ -d ~/.oh-my-zsh ]; then cp /root/.zshrc_custom ~/.zshrc 2>/dev/null || true; git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions 2>/dev/null || true; git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting 2>/dev/null || true; fi && nim --version'",
-	// Commands to run after attaching to the container (every time)
-	"postAttachCommand": "echo 'Welcome to Nim Development Environment with Oh My Zsh'",
-	// Mount the Docker socket for docker-in-docker scenarios
-	// Enables running Docker commands inside the container
-	"mounts": [
-		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
-		// Mount SSH keys from host for Git authentication (if they exist)
-		"source=${localEnv:USERPROFILE}${localEnv:HOME}/.ssh,target=/root/.ssh,readonly,type=bind",
-		// Mount Git config from Windows host (if it exists and has proper permissions)
-		// If not available, configure Git manually in container: git config --global user.name/email
-		"source=${localEnv:USERPROFILE}${localEnv:HOME}/.gitconfig,target=/root/.gitconfig,readonly,type=bind"
-	],
-	// Set container user (default is root, which is fine for development)
-	"remoteUser": "root"
+	"3000": {
+		"label": "Node.js Server",
+		"onAutoForward": "notify"
+	}
+},
+// Commands to run after the container is created (one-time setup)
+// Fix SSH key permissions if keys are mounted from host
+"postCreateCommand": "bash -c 'if [ -f /root/.ssh/id_ed25519 ]; then chmod 600 /root/.ssh/id_ed25519; fi && if [ -f /root/.ssh/id_ed25519.pub ]; then chmod 644 /root/.ssh/id_ed25519.pub; fi && if [ -f /root/.ssh/id_rsa ]; then chmod 600 /root/.ssh/id_rsa; fi && if [ -f /root/.ssh/id_rsa.pub ]; then chmod 644 /root/.ssh/id_rsa.pub; fi && if [ -d ~/.oh-my-zsh ]; then cp /root/.zshrc_custom ~/.zshrc 2>/dev/null || true; git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions 2>/dev/null || true; git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting 2>/dev/null || true; fi && nim --version'",
+// Commands to run after attaching to the container (every time)
+"postAttachCommand": "echo 'Welcome to Nim Development Environment with Oh My Zsh'",
+// Mount the Docker socket for docker-in-docker scenarios
+// Enables running Docker commands inside the container
+"mounts": [
+	"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
+	// Mount SSH keys from host for Git authentication (if they exist)
+	"source=${localEnv:USERPROFILE}${localEnv:HOME}/.ssh,target=/root/.ssh,readonly,type=bind",
+	// Mount Git config from Windows host (if it exists and has proper permissions)
+	// If not available, configure Git manually in container: git config --global user.name/email
+	"source=${localEnv:USERPROFILE}${localEnv:HOME}/.gitconfig,target=/root/.gitconfig,readonly,type=bind"
+],
+// Set container user (default is root, which is fine for development)
+"remoteUser": "root"
 }
