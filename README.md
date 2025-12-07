@@ -353,9 +353,38 @@ wine /usr/local/bin/rcedit.exe myprogram.exe --set-icon icon.ico
 
 **Note**: `rcedit.exe` requires Wine to run in the Linux container. For automated builds, consider using windres for a native Linux solution.
 
-### JavaScript Development with Bun
+### JavaScript Development
 
-Bun provides a fast package manager and runtime:
+#### Node.js with npm
+
+Traditional Node.js runtime with npm package manager:
+
+```bash
+# Check versions
+node --version
+npm --version
+
+# Initialize a new project
+npm init
+# or skip prompts: npm init -y
+
+# Install packages
+npm install <package-name>
+npm install -g <package-name>  # global install
+
+# Run a script
+node script.js
+
+# Run npm scripts from package.json
+npm run <script-name>
+
+# Use npx to run packages without installing
+npx <package-name>
+```
+
+#### Bun Runtime
+
+Bun provides a faster alternative with built-in package manager:
 
 ```bash
 # Initialize a new project
@@ -370,6 +399,8 @@ bun run script.js
 # Use bunx to run packages without installing
 bunx <package-name>
 ```
+
+**Both Node.js and Bun are available** - use whichever fits your workflow.
 
 ### Code Formatting
 
@@ -761,9 +792,7 @@ myfunction() {
 # These changes persist across container rebuilds in a Docker volume!
 ```
 
-The `.zshrc.local` file is stored in a Docker volume (`nim-dev-zsh-config`) and automatically sourced by `.zshrc` on startup.
-
-**Migrating from old setup**: If you had customizations in `.devcontainer/.zshrc.local`, copy them to `/root/.zsh_persistent/.zshrc.local` inside the container.
+The `.zshrc.local` file is stored in a Docker volume (`zsh-config`) at `/root/.zsh_persistent/.zshrc.local` and automatically sourced by `.zshrc` on startup.
 
 ### Built-in Shell Aliases
 
@@ -814,6 +843,13 @@ The container includes a comprehensive set of compilers and tools:
 - **SSH** - Secure shell client for Git authentication
 - **SSL/TLS** - Complete certificate support for HTTPS
 
+### JavaScript Runtime
+- **Node.js** - JavaScript runtime with npm package manager
+- **npm** - Node package manager for installing dependencies
+- **npx** - Execute npm packages without installing
+- **Bun** - Fast JavaScript runtime and package manager
+- **bunx** - Execute packages without installing
+
 ### C/C++ Compilers
 - **GCC** - GNU Compiler Collection (default)
 - **Clang** - LLVM-based compiler
@@ -833,11 +869,7 @@ The container includes a comprehensive set of compilers and tools:
 - **Zig** - Modern compiler with excellent cross-compilation
 - **zigcc** - Zig as a C/C++ compiler (supports Windows, macOS, Linux)
 
-### JavaScript/TypeScript
-- **Node.js** - JavaScript runtime
-- **npm** - Node package manager
-- **Bun** - Fast JavaScript runtime and package manager
-- **bunx** - Execute npm packages without installing
+### Development Tools
 
 ### Supported Target Platforms
 From this single Linux container, you can compile for:

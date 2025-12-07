@@ -65,6 +65,9 @@ services:
       # Persist bash history for convenience
       - bash-history:/root/.bash_history_mount
 
+      # Persist zsh history for convenience
+      - zsh-history:/root/.zsh_history_mount
+
       # Mount Docker socket for Docker-in-Docker (DinD) support
       # This allows running docker commands inside the container
       # The Docker daemon runs on the host, we just use the CLI
@@ -86,6 +89,28 @@ services:
       # Persist user-level Nim configuration (nim.cfg, config.nims)
       # This allows global Nim settings that apply to all projects
       - nim-user-config:/root/.config/nim
+
+      # Persist npm global packages and cache
+      - npm-cache:/root/.npm
+      - npm-global:/usr/local/lib/node_modules
+
+      # Persist Bun global packages and cache
+      - bun-cache:/root/.bun/install/cache
+      - bun-global:/root/.bun/install/global
+
+      # Persist Neovim/Vim configurations
+      - nvim-config:/root/.config/nvim
+      - vim-config:/root/.vim
+
+      # Persist Git credentials and global ignore
+      - git-credentials:/root/.git-credentials
+      - git-global-config:/root/.config/git
+
+      # Persist Oh My Posh cache for faster shell startup
+      - omp-cache:/root/.cache/oh-my-posh
+
+      # Persist Docker CLI cache and configurations
+      - docker-config:/root/.docker
 
     # Port mappings
     # Format: "host_port:container_port"
@@ -144,6 +169,11 @@ volumes:
     driver: local
     name: nim-dev-bash-history
 
+  # Zsh history
+  zsh-history:
+    driver: local
+    name: nim-dev-zsh-history
+
   # Zsh configuration persistence
   zsh-config:
     driver: local
@@ -154,6 +184,54 @@ volumes:
   nim-user-config:
     driver: local
     name: nim-dev-nim-user-config
+
+  # npm cache and global packages
+  npm-cache:
+    driver: local
+    name: nim-dev-npm-cache
+
+  npm-global:
+    driver: local
+    name: nim-dev-npm-global
+
+  # Bun cache and global packages
+  bun-cache:
+    driver: local
+    name: nim-dev-bun-cache
+
+  bun-global:
+    driver: local
+    name: nim-dev-bun-global
+
+  # Neovim configuration
+  nvim-config:
+    driver: local
+    name: nim-dev-nvim-config
+
+  # Vim configuration
+  vim-config:
+    driver: local
+    name: nim-dev-vim-config
+
+  # Git credentials storage
+  git-credentials:
+    driver: local
+    name: nim-dev-git-credentials
+
+  # Git global configuration directory
+  git-global-config:
+    driver: local
+    name: nim-dev-git-global-config
+
+  # Oh My Posh cache
+  omp-cache:
+    driver: local
+    name: nim-dev-omp-cache
+
+  # Docker CLI cache and config
+  docker-config:
+    driver: local
+    name: nim-dev-docker-config
 
 # Custom network for the development environment
 # Useful if you want to add additional services (databases, etc.)

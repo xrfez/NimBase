@@ -331,6 +331,14 @@ RUN curl -s https://ohmyposh.dev/install.sh | bash -s
 # Create zsh configuration
 RUN mkdir -p /root/.config && \
     { \
+    echo '# Zsh history configuration - persist in volume'; \
+    echo 'export HISTFILE=/root/.zsh_history_mount'; \
+    echo 'export HISTSIZE=10000'; \
+    echo 'export SAVEHIST=10000'; \
+    echo 'setopt SHARE_HISTORY'; \
+    echo 'setopt HIST_IGNORE_DUPS'; \
+    echo 'setopt HIST_FIND_NO_DUPS'; \
+    echo ''; \
     echo '# Oh My Posh initialization for Nim development'; \
     echo 'eval "$(oh-my-posh init zsh --config https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/markbull.omp.json)"'; \
     echo ''; \
@@ -377,7 +385,12 @@ RUN mkdir -p /root/.zsh_persistent && \
     echo '# Example customizations:'; \
     echo '# export MY_VAR="value"'; \
     echo '# alias myalias="command"'; \
-    } > /root/.zsh_persistent/.zshrc.local
+    } > /root/.zsh_persistent/.zshrc.local && \
+    # Configure bash history to use volume mount \
+    echo 'export HISTFILE=/root/.bash_history_mount' >> /root/.bashrc && \
+    # Configure zsh history to use volume mount \
+    mkdir -p /root/.cache/oh-my-posh && \
+    touch /root/.zsh_history_mount
 
 # Create workspace directory (will be overridden by volume mount)
 RUN mkdir -p /workspace
