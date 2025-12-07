@@ -37,12 +37,17 @@ docker-compose restart
 
 ### Enter Container
 ```powershell
-# Using docker-compose
-docker-compose exec nim-dev bash
+# Using docker-compose (recommended)
+docker-compose exec nim-dev zsh
 
 # Using docker directly
-docker exec -it nim-dev-container bash
+docker exec -it nim-dev-container zsh
+
+# Then navigate to your workspace
+cd /projects/NimBase
 ```
+
+**Note**: The container starts in `/root`. Always navigate to `/projects/NimBase` to access your workspace.
 
 ## Nim Commands
 
@@ -212,10 +217,13 @@ git config --global credential.helper store
 
 ### Direct Docker Workflow
 1. `docker-compose up -d`
-2. `docker-compose exec nim-dev bash`
-3. Work in `/projects/NimBase` (or navigate to your project)
-4. Exit with `exit`
-5. `docker-compose down` when done
+2. `docker-compose exec nim-dev zsh`
+3. **Navigate to the project**: `cd /projects/NimBase`
+4. Work on your code
+5. Exit with `exit`
+6. `docker-compose down` when done
+
+**Note**: The container starts in `/root`. Always `cd /projects/NimBase` to access your workspace.
 
 ## Troubleshooting
 
