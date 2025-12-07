@@ -1,5 +1,23 @@
 # Nim Development Environment - Quick Reference
 
+## 🚀 Quick Start (First Time Setup)
+
+1. **Clone and open**:
+   ```powershell
+   git clone https://github.com/xrfez/NimBase.git
+   cd NimBase
+   code .
+   ```
+
+2. **Reopen in container**:
+   - Press `F1`
+   - Select: `Dev Containers: Reopen in Container`
+   - Wait for build (5-10 minutes)
+
+3. **Done!** Terminal opens at `/projects/NimBase` ready to code.
+
+---
+
 ## Container Commands
 
 ### Using Management Script (Easiest)
@@ -209,11 +227,11 @@ git config --global credential.helper store
 
 ## Development Workflow
 
-### VS Code Dev Container
-1. Open folder in VS Code
+### VS Code Dev Container (Recommended)
+1. `code .` (in NimBase directory)
 2. Press `F1`
 3. Select: `Dev Containers: Reopen in Container`
-4. Start coding!
+4. Start coding! (Terminal opens at `/projects/NimBase`)
 
 ### Direct Docker Workflow
 1. `docker-compose up -d`

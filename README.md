@@ -41,17 +41,34 @@ A complete, plug-and-play Docker-based development environment for the Nim progr
 
 ## 🚀 Quick Start
 
-### Getting This Repository
+### Easiest Way to Get Started
+
+1. **Clone the repository** (anywhere on your Windows system):
+   ```powershell
+   cd D:\MyProjects  # Or any directory you prefer
+   git clone https://github.com/xrfez/NimBase.git
+   cd NimBase
+   ```
+
+2. **Open in VS Code**:
+   ```powershell
+   code .
+   ```
+
+3. **Reopen in container**:
+   - Press `F1`
+   - Type and select: `Dev Containers: Reopen in Container`
+   - Wait for build (5-10 minutes first time)
+
+4. **Start coding!**
+   - Open terminal (`` Ctrl+` ``)
+   - You're in a fully configured Nim environment at `/projects/NimBase`
+
+### Clone Location Flexibility
 
 You can clone this repository **anywhere** on your system. The container will automatically mount the parent directory, giving you access to sibling projects:
 
 ```powershell
-# Clone to any location you prefer
-cd D:\MyProjects
-git clone https://github.com/yourusername/NimBase.git
-cd NimBase
-
-# Or download and extract the ZIP to any folder
 # Example locations:
 #   C:\Users\YourName\Dev\NimBase
 #   D:\Programming\NimBase
