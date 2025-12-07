@@ -102,17 +102,26 @@
 				"terminal.integrated.fontFamily": "MesloLGM Nerd Font, MesloLGS NF, FiraCode Nerd Font, Consolas, monospace",
 				"terminal.integrated.fontSize": 14,
 				// File associations
+				// Note: .nimble files are intentionally NOT associated with "nim" language
+				// to prevent nimlangserver from processing them and crashing
 				"files.associations": {
 					"*.nim": "nim",
 					"*.nims": "nim",
-					"*.nimble": "nim"
+					"*.nimble": "ini" // Treat as INI to prevent LSP activation
 				},
-				// Exclude files from being processed by the language server
+				// Exclude files from being watched for changes by file watchers
+				// This prevents nimlangserver crashes when these files change
 				"files.watcherExclude": {
 					"**/*.nimble": true,
 					"**/*.paths": true,
 					"**/*.cfg": true
-				}
+				},
+				// Exclude files from language server processing
+				"nim.langserver.excludeFiles": [
+					"**/*.nimble",
+					"**/*.paths",
+					"**/*.cfg"
+				]
 			}
 		}
 	},
