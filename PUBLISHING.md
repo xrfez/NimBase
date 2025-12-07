@@ -111,7 +111,7 @@ The published image contains:
 - Cross-compilation tools
 - Docker CLI
 - Git, Node.js, Bun
-- Oh My Zsh with configurations
+- Oh My Posh with customizable themes
 - nimlangserver, NPH formatter
 - All build tools (CMake, Make, LLD)
 
@@ -180,7 +180,7 @@ Complete Docker-based development environment for the Nim programming language.
 - Multiple C/C++ compilers (GCC, Clang, LLVM, TCC, MinGW, Zig)
 - Docker-in-Docker support
 - Git with SSH support
-- Oh My Zsh pre-configured
+- Oh My Posh pre-configured
 - VS Code Dev Containers ready
 
 ## Quick Start

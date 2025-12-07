@@ -26,21 +26,14 @@
 	"features": {
 		// Git is essential for version control
 		"ghcr.io/devcontainers/features/git:1": {},
-		// Common utilities like zsh, oh-my-zsh
+		// Common utilities like zsh for shell
 		"ghcr.io/devcontainers/features/common-utils:2": {
 			"installZsh": true,
 			"installOhMyZsh": true,
 			"configureZshAsDefaultShell": true,
 			"upgradePackages": true
-		},
-		// Install Nerd Fonts (optional but recommended for best experience)
-		// Uncomment if you want Nerd Fonts installed automatically
-		// "ghcr.io/meaningful-ooo/devcontainer-features/fish:1": {
-		//     "nerdfonts": "FiraCode"
-		// }
+		}
 	},
-	// Post-create command to set up Oh My Zsh theme and plugins
-	"postCreateCommand": "bash -c 'if [ -d ~/.oh-my-zsh ]; then cp /root/.zshrc_custom ~/.zshrc 2>/dev/null || true; git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions 2>/dev/null || true; git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting 2>/dev/null || true; fi && nim --version'",
 	// VS Code settings to apply inside the container
 	"customizations": {
 		"vscode": {
@@ -75,7 +68,6 @@
 				"nim.formatter": "nph",
 				// Nim file-specific formatting settings
 				"[nim]": {
-					"editor.defaultFormatter": "nimlang.nimlang",
 					"editor.formatOnSave": true
 				},
 				// Disable format on save for INI files (includes .cfg, .nimble, .paths)
@@ -90,7 +82,7 @@
 					80,
 					100
 				],
-				// Terminal settings - use zsh by default with Oh My Zsh
+				// Terminal settings - use zsh by default with Oh My Posh
 				"terminal.integrated.defaultProfile.linux": "zsh",
 				"terminal.integrated.profiles.linux": {
 					"bash": {
@@ -126,12 +118,12 @@
 				// Exclude files from language server processing
 				"nim.langserver.excludeFiles": [
 					"**/*.nimble",
-					"**/*.paths"
+					"**/*.paths",
+					"**/*.cfg"
 				]
-			]
+			}
 		}
-	}
-},
+	},
 // Port forwarding - these ports will be accessible from Windows
 // Format: "containerPort:hostPort" or just "port" for same on both
 "forwardPorts": [
@@ -151,9 +143,9 @@
 },
 // Commands to run after the container is created (one-time setup)
 // Fix SSH key permissions if keys are mounted from host
-"postCreateCommand": "bash -c 'if [ -f /root/.ssh/id_ed25519 ]; then chmod 600 /root/.ssh/id_ed25519; fi && if [ -f /root/.ssh/id_ed25519.pub ]; then chmod 644 /root/.ssh/id_ed25519.pub; fi && if [ -f /root/.ssh/id_rsa ]; then chmod 600 /root/.ssh/id_rsa; fi && if [ -f /root/.ssh/id_rsa.pub ]; then chmod 644 /root/.ssh/id_rsa.pub; fi && if [ -d ~/.oh-my-zsh ]; then cp /root/.zshrc_custom ~/.zshrc 2>/dev/null || true; git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions 2>/dev/null || true; git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting 2>/dev/null || true; fi && nim --version'",
+"postCreateCommand": "bash -c 'if [ -f /root/.ssh/id_ed25519 ]; then chmod 600 /root/.ssh/id_ed25519; fi && if [ -f /root/.ssh/id_ed25519.pub ]; then chmod 644 /root/.ssh/id_ed25519.pub; fi && if [ -f /root/.ssh/id_rsa ]; then chmod 600 /root/.ssh/id_rsa; fi && if [ -f /root/.ssh/id_rsa.pub ]; then chmod 644 /root/.ssh/id_rsa.pub; fi && cp /root/.zshrc_custom ~/.zshrc 2>/dev/null || true && nim --version'",
 // Commands to run after attaching to the container (every time)
-"postAttachCommand": "echo 'Welcome to Nim Development Environment with Oh My Zsh'",
+"postAttachCommand": "echo 'Welcome to Nim Development Environment with Oh My Posh'",
 // Mount the Docker socket for docker-in-docker scenarios
 // Enables running Docker commands inside the container
 "mounts": [

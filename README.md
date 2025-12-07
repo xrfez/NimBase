@@ -21,7 +21,7 @@ A complete, plug-and-play Docker-based development environment for the Nim progr
 - **VS Code Integration**: Full Dev Containers support with recommended extensions
 - **Persistent Storage**: Volumes for package cache and bash history
 - **Git Integration**: Automatic SSH key and credential sharing from Windows host
-- **Oh My Posh**: Modern cross-platform prompt theme engine with markbull theme
+- **Oh My Posh**: Modern cross-platform prompt theme engine with customizable themes
 
 ## 📋 Prerequisites
 
@@ -31,7 +31,7 @@ A complete, plug-and-play Docker-based development environment for the Nim progr
 - **VS Code** with the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
 ### Recommended (for best terminal experience)
-- **Nerd Font** installed on Windows for proper Oh My Zsh theme rendering
+- **Nerd Font** installed on Windows for proper Oh My Posh theme rendering
   - Download: [Nerd Fonts](https://www.nerdfonts.com/font-downloads)
   - Popular choices: FiraCode Nerd Font, MesloLGS NF, Hack Nerd Font
   - Install on Windows, then configure VS Code to use it
@@ -41,29 +41,6 @@ A complete, plug-and-play Docker-based development environment for the Nim progr
 - Basic knowledge of Docker and containers
 
 ## 🚀 Quick Start
-
-### Easiest Way to Get Started
-
-1. **Clone the repository** (anywhere on your Windows system):
-   ```powershell
-   cd D:\MyProjects  # Or any directory you prefer
-   git clone https://github.com/xrfez/NimBase.git
-   cd NimBase
-   ```
-
-2. **Open in VS Code**:
-   ```powershell
-   code .
-   ```
-
-3. **Reopen in container**:
-   - Press `F1`
-   - Type and select: `Dev Containers: Reopen in Container`
-   - Wait for build (5-10 minutes first time)
-
-4. **Start coding!**
-   - Open terminal (`` Ctrl+` ``)
-   - You're in a fully configured Nim environment at `/projects/NimBase`
 
 ### Clone Location Flexibility
 

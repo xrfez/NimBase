@@ -386,7 +386,7 @@ RUN mkdir -p /workspace
 WORKDIR /projects/NimBase
 
 # Default shell is bash for Linux container
-# Zsh will be available when Oh My Zsh is installed via devcontainer feature
+# Zsh will be available via devcontainer feature
 SHELL ["/bin/bash", "-c"]
 
 # Set up bash prompt with version information
@@ -412,7 +412,7 @@ RUN echo 'export PS1="\[\e[1;32m\][nim-dev]\[\e[0m\] \w $ "' >> /root/.bashrc \
     && echo 'echo ""' >> /root/.bashrc \
     && echo 'echo "Workspace: /workspace"' >> /root/.bashrc \
     && echo 'echo "======================================"' >> /root/.bashrc \
-    && echo 'echo "Tip: Type '\''zsh'\'' for Oh My Zsh shell"' >> /root/.bashrc
+    && echo 'echo "Tip: Type '\''zsh'\'' for Oh My Posh shell"' >> /root/.bashrc
 
 # Expose common ports for development
 # 8080: Common development server port
