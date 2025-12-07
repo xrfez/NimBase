@@ -50,6 +50,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 # - neovim: Modern vim
 # - tmux: Terminal multiplexer
 # - valgrind, gdb, strace: Debugging tools
+# - wine: Windows application compatibility layer (for rcedit.exe)
 RUN apt-get update && apt-get install -y \
     build-essential \
     clang \
@@ -83,6 +84,8 @@ RUN apt-get update && apt-get install -y \
     valgrind \
     gdb \
     strace \
+    wine \
+    wine64 \
     && rm -rf /var/lib/apt/lists/*
 
 # Create symlinks for fd and bat (Debian uses different names)
