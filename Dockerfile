@@ -267,9 +267,22 @@ RUN if [ ! -f "${NIMBASE}/bin/nimble" ]; then \
 # Update nimble package list
 RUN nimble refresh
 
-# Install nimlangserver for LSP support in editors
+# Install nimlangserver from source for LSP support in editors
+# Building from HEAD to avoid crashes seen in v1.12.0
 # This provides autocomplete, go-to-definition, and other IDE features
-RUN nimble install -y nimlangserver
+RUN git clone https://github.com/nim-lang/langserver.git /tmp/nimlangserver \
+    && cd /tmp/nimlangserver \
+    && nimble build -y \
+    && if [ -f nimlangserver ]; then \
+    cp nimlangserver /usr/local/bin/ && chmod +x /usr/local/bin/nimlangserver; \
+    elif [ -f bin/nimlangserver ]; then \
+    cp bin/nimlangserver /usr/local/bin/ && chmod +x /usr/local/bin/nimlangserver; \
+    else \
+    echo "Error: nimlangserver build failed or executable not found"; \
+    exit 1; \
+    fi \
+    && cd / \
+    && rm -rf /tmp/nimlangserver
 
 # Install NPH (Nim Pretty Hacker) for code formatting
 # NPH is the modern formatter for Nim code
