@@ -270,9 +270,10 @@ RUN nimble refresh
 # Install nimlangserver from source for LSP support in editors
 # Building from HEAD to avoid crashes seen in v1.12.0
 # This provides autocomplete, go-to-definition, and other IDE features
+# --useSystemNim ensures it uses the installed Nim compiler
 RUN git clone https://github.com/nim-lang/langserver.git /tmp/nimlangserver \
     && cd /tmp/nimlangserver \
-    && nimble build -y \
+    && nimble build -y --useSystemNim \
     && if [ -f nimlangserver ]; then \
     cp nimlangserver /usr/local/bin/ && chmod +x /usr/local/bin/nimlangserver; \
     elif [ -f bin/nimlangserver ]; then \
