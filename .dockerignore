@@ -1,0 +1,73 @@
+# .dockerignore
+# Prevents unnecessary files from being sent to Docker daemon during build
+# This speeds up builds and reduces image size
+
+# Git files
+.git
+.gitignore
+.gitattributes
+
+# Documentation (we want README.md but can exclude others)
+*.md
+!README.md
+AGENTS.md
+
+# Docker files (don't need these inside the image)
+docker-compose.yml
+.dockerignore
+
+# Dev container config (not needed in image, only for VS Code)
+.devcontainer/
+
+# Build artifacts
+nimcache/
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.o
+*.obj
+
+# Nim specific
+*.nimble.lock
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+*.log
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Python (if you use Python tools)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Test coverage
+htmlcov/
+.coverage
+coverage/
+
+# Local environment files
+.env
+.env.local
+*.local

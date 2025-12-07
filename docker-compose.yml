@@ -1,0 +1,153 @@
+# Docker Compose configuration for Nim development environment
+# This file defines the services, networks, and volumes for the Nim dev environment.
+#
+# Usage:
+# - Build and start: docker-compose up -d
+# - Stop: docker-compose down
+# - Rebuild: docker-compose up -d --build
+# - View logs: docker-compose logs -f
+#
+# The configuration uses volumes to persist data between container restarts.
+
+version: '3.8'
+
+services:
+  # Main Nim development service
+  nim-dev:
+    # Build configuration
+    build:
+      # Use the Dockerfile in the current directory
+      context: .
+      dockerfile: Dockerfile
+      # Build arguments (can be overridden)
+      # Customize installation paths if needed
+      args:
+        NIMBASE: /opt/nim
+        ZIGPATH: /opt/zig
+        # Example: Use different paths
+        # NIMBASE: /usr/local/nim
+        # ZIGPATH: /usr/local/zig
+
+        # Container name for easy reference
+    container_name: nim-dev-container
+
+    # Image name after building
+    image: nim-dev:latest
+
+    # Keep container running even if no command is specified
+    # This is important for dev containers
+    stdin_open: true
+    tty: true
+
+    # Volume mounts
+    # Maps directories between host (Windows) and container (Linux)
+    volumes:
+      # Mount parent directory to /projects in container for access to sibling projects
+      # Current directory (NimBase) is accessible at /projects/NimBase
+      # Customize this mount point to fit your workflow:
+      #   - For entire D: drive: source: D:\ target: /d
+      #   - For user directory: source: ${USERPROFILE} target: /home
+      #   - For specific folder: source: D:\MyProjects target: /projects
+      - type: bind
+        source: ..
+        target: /projects
+
+      # Workspace folder points to the NimBase directory inside /projects
+      # This is overridden by devcontainer.json workspaceFolder setting
+
+      # Persist Nim packages across container rebuilds
+      # This avoids re-downloading packages every time
+      - nimble-cache:/root/.nimble
+
+      # Persist Nim compiler cache for faster builds
+      - nim-cache:/root/.cache/nim
+
+      # Persist bash history for convenience
+      - bash-history:/root/.bash_history_mount
+
+      # Mount Docker socket for Docker-in-Docker (DinD) support
+      # This allows running docker commands inside the container
+      # The Docker daemon runs on the host, we just use the CLI
+      - /var/run/docker.sock:/var/run/docker.sock
+
+      # Mount SSH keys from Windows host for Git authentication
+      # This allows using your existing SSH keys for Git operations
+      # Windows path is converted by Docker Desktop
+      - ${USERPROFILE}/.ssh:/root/.ssh:ro
+
+      # Mount Git configuration from Windows host
+      # Preserves your Git user.name, user.email, and other settings
+      - ${USERPROFILE}/.gitconfig:/root/.gitconfig:ro
+
+      # Persist custom zsh configuration across container rebuilds
+      # Add your customizations directly in the container at /root/.zshrc.local
+      - zsh-config:/root/.zsh_persistent
+
+    # Port mappings
+    # Format: "host_port:container_port"
+    ports:
+      # Common development server port
+      - "8080:8080"
+      # Node.js/React development server port
+      - "3000:3000"
+      # Additional ports can be added as needed
+      # - "5000:5000"
+
+      # Environment variables
+    environment:
+      # Set timezone
+      - TZ=UTC
+      # Enable color output in terminal
+      - TERM=xterm-256color
+      # Git credential helper - uses Windows Credential Manager via host
+      - GIT_CONFIG_COUNT=1
+      - GIT_CONFIG_KEY_0=credential.helper
+      - GIT_CONFIG_VALUE_0=store
+      # Custom environment variables for your Nim projects
+      # Add any project-specific variables here
+
+      # Network configuration
+    networks:
+      - nim-network
+
+    # Restart policy
+    # "unless-stopped" means container will restart automatically
+    # unless explicitly stopped
+    restart: unless-stopped
+
+    # Working directory inside container
+    working_dir: /workspace
+
+    # Default command (can be overridden)
+    # Keeps container running for dev container usage
+    command: /bin/bash -c "tail -f /dev/null"
+
+# Named volumes for persistence
+# These volumes persist data even when containers are removed
+volumes:
+  # Nimble package cache
+  nimble-cache:
+    driver: local
+    name: nim-dev-nimble-cache
+
+  # Nim compiler cache
+  nim-cache:
+    driver: local
+    name: nim-dev-nim-cache
+
+  # Bash history
+  bash-history:
+    driver: local
+    name: nim-dev-bash-history
+
+  # Zsh configuration persistence
+  zsh-config:
+    driver: local
+    name: nim-dev-zsh-config
+
+# Custom network for the development environment
+# Useful if you want to add additional services (databases, etc.)
+networks:
+  nim-network:
+    driver: bridge
+    name: nim-dev-network

@@ -1,0 +1,42 @@
+# Nim compiled artifacts
+*.exe
+*.dll
+*.so
+*.dylib
+nimcache/
+nimblecache/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+bin/
+build/
+dist/
+
+# Logs
+*.log
+
+# Testing
+tests/results/
+htmldocs/
+
+# Local development
+.env
+.env.local
+*.local
+
+# Docker (keep docker-compose.yml and Dockerfile)
+# But ignore any local overrides
+docker-compose.override.yml
+
+# Nimble lock files (optional - some prefer to commit these)
+# nimble.lock

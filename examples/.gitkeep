@@ -1,0 +1,10 @@
+# Example Nim project structure
+# This directory contains a sample Nim project to get you started
+# You can use this as a template for your own projects
+
+## To use this example:
+## 1. Enter the container: docker-compose exec nim-dev bash
+## 2. Navigate here: cd /workspace/examples/hello_world
+## 3. Build and run: nim c -r hello.nim
+
+See the README.md in the root directory for more information.

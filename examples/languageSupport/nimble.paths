@@ -1,0 +1,11 @@
+--noNimblePath
+--path:"/root/.nimble/pkgs2/opencl-1.0.1-89c70044ee474834a4f7dcd6bf05a9082b0886bb"
+--path:"/root/.nimble/pkgs2/nimlapack-0.3.1-fcb25795c6fb43f9251b7f34c3ad84c39e645afd"
+--path:"/root/.nimble/pkgs2/zip-0.3.1-747aab3c43ecb7b50671cdd0ec3b2edc2c83494c"
+--path:"/root/.nimble/pkgs2/arraymancer-0.7.33-c37fb5d98fce8661ade439d89d0a6a3c9d65c8fc"
+--path:"/root/.nimble/pkgs2/untar-0.1.0-ceb12634783156ddd511410242dc7855ae2f4a14"
+--path:"/root/.nimble/pkgs2/nimblas-0.3.1-e1ecdea4bb8176f12d66efd4aa0c7b3bea970027"
+--path:"/root/.nimble/pkgs2/nimcuda-0.2.2-630aaaad24b7f817f6c576bca246141919870cb8"
+--path:"/root/.nimble/pkgs2/clblast-0.0.2-0b4514b483f83492c49bb0629e5b45ffdf8e7aa3"
+--path:"/root/.nimble/pkgs2/nimcl-0.1.3-fb304e3b75503fb359ffe649d019a2fac7e2b3dc"
+--path:"/root/.nimble/pkgs2/stb_image-2.5-abf5fd03e72ee4c316c50a0538b973e355dcb175"
