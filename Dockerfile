@@ -25,6 +25,8 @@ ENV DEBIAN_FRONTEND=noninteractive \
     ZIGPATH=${ZIGPATH} \
     # Set PATH to include Nim, Zig, and other binaries
     PATH=${NIMBASE}/bin:${ZIGPATH}:/root/.nimble/bin:$PATH
+# Enable package manager
+ENV PATH="${PATH}:/sbin"
 
 # Install system dependencies and compilers
 # - build-essential: GCC and essential build tools (make, g++, etc.)
