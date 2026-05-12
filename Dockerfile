@@ -230,10 +230,6 @@ RUN RCEDIT_VERSION="2.0.0" \
     && curl -fsSL "https://github.com/electron/rcedit/releases/download/v${RCEDIT_VERSION}/rcedit-x64.exe" -o /usr/local/bin/rcedit.exe \
     && chmod +x /usr/local/bin/rcedit.exe
 
-# Create Nim installation directory
-# Uses mkdir -p so it works even if directory exists or parent doesn't exist
-RUN mkdir -p ${NIMBASE}
-
 # Install grabnim (Nim version manager by janAkali) from releases
 # Using pre-built binary from releases
 # Source: https://codeberg.org/janAkali/grabnim
@@ -245,21 +241,18 @@ RUN GRABNIM_VERSION="v0.4.0" \
     && rm -f /tmp/grabnim.tar.xz
 
 # Install latest stable Nim version using grabnim
-# grabnim without arguments installs latest stable version
-# grabnim installs to ~/.local/share/grabnim/ by default
+# grabnim installs to ~/.local/share/grabnim/ and manages a 'current' symlink
+# We symlink NIMBASE -> current so that 'grabnim <version>' inside the container
+# immediately updates what 'nim' on PATH resolves to.
 RUN grabnim fetch \
     && grabnim \
     && echo "Checking Nim installation..." \
     && ls -la ~/.local/share/grabnim/ || true \
-    && INSTALLED_NIM=$(find ~/.local/share/grabnim -maxdepth 1 -type d -name "nim-*" | head -n 1) \
-    && echo "Found Nim at: $INSTALLED_NIM" \
-    && if [ -n "$INSTALLED_NIM" ]; then \
-    cp -r "$INSTALLED_NIM"/* ${NIMBASE}/ && \
-    chmod +x ${NIMBASE}/bin/* 2>/dev/null || true && \
-    echo "Nim installed to ${NIMBASE}"; \
-    else \
-    echo "ERROR: Could not find Nim installation" && exit 1; \
-    fi
+    && if [ ! -L ~/.local/share/grabnim/current ]; then \
+    echo "ERROR: grabnim did not create a 'current' symlink" && exit 1; \
+    fi \
+    && ln -s /root/.local/share/grabnim/current ${NIMBASE} \
+    && echo "Nim installed to ${NIMBASE} (symlink -> grabnim current)"
 
 # Ensure nimble is available
 # grabnim should set this up, but verify it's working
@@ -277,11 +270,12 @@ RUN if [ ! -f "${NIMBASE}/bin/nimble" ]; then \
 # Update nimble package list
 RUN nimble refresh
 
-# Install nimlangserver from source for LSP support in editors
-# Building from HEAD to avoid crashes seen in v1.12.0
-# This provides autocomplete, go-to-definition, and other IDE features
+# Install nimlangserver v1.14.0 from source for LSP + MCP support in editors
+# v1.14.0 adds MCP (Model Context Protocol) server mode via --mcp flag,
+# exposing nimFindReferences, nimFindSymbols, nimListSymbols, nimCheckProject,
+# and nimCheckFile as MCP tools for AI coding agents.
 # --useSystemNim ensures it uses the installed Nim compiler
-RUN git clone https://github.com/nim-lang/langserver.git /tmp/nimlangserver \
+RUN git clone --depth 1 --branch v1.14.0 https://github.com/nim-lang/langserver.git /tmp/nimlangserver \
     && cd /tmp/nimlangserver \
     && nimble build -y --useSystemNim \
     && if [ -f nimlangserver ]; then \

@@ -1,0 +1,24 @@
+{
+  // MCP (Model Context Protocol) server configuration for nimlangserver v1.14.0+
+  // This registers nimlangserver as an MCP tool provider so AI coding agents
+  // (GitHub Copilot, Claude, Gemini, etc.) can call Nim-specific tools directly.
+  //
+  // Available MCP tools exposed by nimlangserver:
+  //   nimFindReferences  - Find all references to a symbol at a given location
+  //   nimFindSymbols     - Search for symbols matching a query across the workspace
+  //   nimListSymbols     - List all symbols defined in a specific file
+  //   nimCheckProject    - Run diagnostics on the entire project
+  //   nimCheckFile       - Run diagnostics on a single file
+  //
+  // Transport: stdio with newline-delimited JSON (distinct from LSP's Content-Length framing)
+  // The --mcp flag switches nimlangserver into MCP mode instead of LSP mode.
+  "servers": {
+    "nimlangserver": {
+      "type": "stdio",
+      "command": "/usr/local/bin/nimlangserver",
+      "args": [
+        "--mcp"
+      ]
+    }
+  }
+}
